@@ -1,0 +1,9 @@
+#Thu Jun 25 15:23:54 NZST 2009
+cleanup_settings_version=2
+eclipse.preferences.version=1
+formatter_profile=org.eclipse.jdt.ui.default.eclipse_profile
+formatter_settings_version=11
+org.eclipse.jdt.ui.exception.name=e
+org.eclipse.jdt.ui.gettersetter.use.is=true
+org.eclipse.jdt.ui.keywordthis=true
+org.eclipse.jdt.ui.overrideannotation=true
