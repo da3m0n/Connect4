@@ -2,6 +2,7 @@ package game.communications.tcpcomms;
 
 import game.Client;
 import game.Grid;
+import game.MakeBoard;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,13 +17,15 @@ public class TCPClient extends Thread
     private ServerSocket _listener; // listens for a connection request
     private Client client;
     private Grid grid;
-    private PrintWriter _outgoing;
+   private MakeBoard _makeBoard;
+   private PrintWriter _outgoing;
     private BufferedReader _incoming;
 
-    public TCPClient(Client client, Grid grid)
+    public TCPClient(Client client, Grid grid, MakeBoard makeBoard)
     {
         this.client = client;
         this.grid = grid;
+       _makeBoard = makeBoard;
     }
 
     public void run()
@@ -34,37 +37,29 @@ public class TCPClient extends Thread
             _incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             _outgoing = new PrintWriter(connection.getOutputStream());
 
-            System.out.println("client> Receiving string...");
-
             // send data over socket
-//           System.out.println("Port: " + TCPServer.getInstance().getPort());
             sendMessage(String.valueOf(TCPServer.getInstance().getPort()));
 
             String fromServer;
 
-//                while(true)
             while((fromServer = _incoming.readLine()) != null)
             {
                 System.out.println("fromServer = " + fromServer);
+                sendMessage("Waiting for repsonse");
 //                    System.out.println("Waiting for other player to move");
 //                    sendMessage("move");
-//                    String data = _incoming.readLine();
-//                    System.out.println("Data: " + data);
-//
-//                    if (data != null)
-//                    {
-//                       System.out.println("Client: " + data);
-//                       sendMessage(data);
-//                    }
-
-//                    System.err.println("please move");
 //                    grid.play(GridEntry.Blue, 0);
-
-//                    outgoing.println("move" + grid.getNextMove());
+               try
+               {
+//                  System.out.println("move " + grid.getNextMove());
+//                   sendMessage("" + grid.getNextMove());
+                  sendMessage(String.valueOf(grid.getNextMove()));
+               }
+               catch (InterruptedException e)
+               {
+                  e.printStackTrace();
+               }
             }
-
-
-//            }
         }
         catch(UnknownHostException e)
         {
@@ -76,10 +71,6 @@ public class TCPClient extends Thread
             System.err.println("so and so doesn't want to play");
             e.printStackTrace();
         }
-//            catch(InterruptedException e)
-//            {
-//                e.printStackTrace();
-//            }
         finally
         {
             _outgoing.close();
@@ -97,7 +88,7 @@ public class TCPClient extends Thread
 
     }
 
-    public void sendMessage(String msg)
+   public void sendMessage(String msg)
     {
         _outgoing.println(msg);
         _outgoing.flush();

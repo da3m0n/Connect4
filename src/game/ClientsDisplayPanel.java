@@ -32,7 +32,7 @@ public class ClientsDisplayPanel extends JPanel
     private JTable _table = new JTable();
     private Map<Client, Long> _currentClients = new HashMap<Client, Long>();
 
-    public ClientsDisplayPanel(final Grid grid, final Game game)
+    public ClientsDisplayPanel(final Grid grid, final Game game, final MakeBoard makeBoard)
     {
 //      setPreferredSize(new Dimension(180, 100));
         setBackground(Color.lightGray);
@@ -54,12 +54,12 @@ public class ClientsDisplayPanel extends JPanel
                     {
 //                  new NotificationDialog(game.getFrame(), client, grid);
                         String text = "Do you want to play a game with " + client;
-                        final NotificationDialog notificationDialog = new NotificationDialog(game.getFrame(), client, text);
+                        final NotificationDialog notificationDialog = new NotificationDialog(game.getFrame(), text);
                         notificationDialog.addMyListener(new ActionListener()
                         {
                             public void actionPerformed(ActionEvent e)
                             {
-                                new TCPClient(client, grid).start();
+                                new TCPClient(client, grid, makeBoard).start();
                                 notificationDialog.setVisible(false);
                             }
                         });

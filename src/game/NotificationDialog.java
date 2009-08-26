@@ -11,7 +11,7 @@ public class NotificationDialog extends JDialog
     private JButton _yes;
     private JLabel _label;
 
-    public NotificationDialog(JFrame parent, Client client, String text)
+    public NotificationDialog(JFrame parent, String text)
     {
         super(parent, "Wanna play?");
 
@@ -19,13 +19,14 @@ public class NotificationDialog extends JDialog
 
         setLayout(new BorderLayout());
         setModalityType(ModalityType.TOOLKIT_MODAL);
-        
+//        setFocusable(true);
+       
         JPanel labelPanel = new JPanel(new BorderLayout());
         _yes = new JButton("Yes");
         JButton no = new JButton("No");
         JLabel _label = new JLabel(text, icon, JLabel.CENTER);
 
-        _yes.setRequestFocusEnabled(true);
+        _yes.setFocusCycleRoot(true);
         _yes.setMnemonic('y');
         no.setMnemonic('n');
 

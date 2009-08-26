@@ -23,11 +23,12 @@ public class MakeBoard extends JPanel
    private BorderLayout borderLayout = new BorderLayout(0, 10);
    private ClientsDisplayPanel _clientsDisplayPanel;// = new ClientsDisplayPanel(_grid);
    private Game _game;
+   private int _selectedColumn;
 
    public MakeBoard(Game game)
    {
       _game = game;
-      _clientsDisplayPanel = new ClientsDisplayPanel(_grid, _game);
+      _clientsDisplayPanel = new ClientsDisplayPanel(_grid, _game, this);
       setLayout(borderLayout);
       setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Connect 4"));
 
@@ -76,7 +77,7 @@ public class MakeBoard extends JPanel
    }
 
 
-   private void play(int column)
+   public void play(int column)
    {
       if (_grid.play(_turn[_color], column))
       {
@@ -98,6 +99,11 @@ public class MakeBoard extends JPanel
    public void setURLText(String text)
    {
       _buttonPanel.setURLText(text);
+   }
+
+   public int getSelectedColumn()
+   {
+      return _selectedColumn;
    }
 
    private class MyKeyListener implements KeyListener
@@ -127,7 +133,8 @@ public class MakeBoard extends JPanel
       public void mouseClicked(MouseEvent e)
       {
          _buttonPanel.setReplayEnabled(true);
-         play(_paintedGrid.giveMeTheColumn(e.getX()));
+         _selectedColumn = _paintedGrid.giveMeTheColumn(e.getX());
+         play(_selectedColumn);
       }
 
       public void mousePressed(MouseEvent e)
