@@ -3,6 +3,7 @@ package game.communications.tcpcomms;
 import game.Client;
 import game.Grid;
 import game.MakeBoard;
+import game.gameplayUtils.GameUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,8 +44,6 @@ public class TCPClient extends Thread
             // send data over socket
             sendMessage(String.valueOf(TCPServer.getInstance().getPort()));
 
-//            sendMessage("Sent game request. Waiting for repsonse");
-
             String fromServer;
             fromServer = incoming.readLine();
             if(fromServer != null)
@@ -67,7 +66,7 @@ public class TCPClient extends Thread
                 }
 
             }
-            TCPServer.gameLoop(incoming, _outgoing, _makeBoard, grid);
+            GameUtils.gameLoop(incoming, _outgoing, _makeBoard, grid);
         }
         catch(UnknownHostException e)
         {
@@ -98,8 +97,6 @@ public class TCPClient extends Thread
 
     public void sendMessage(String msg)
     {
-        _outgoing.println(msg);
-        _outgoing.flush();
-        System.out.println("client> " + msg);
+        GameUtils.sendMessage(_outgoing, msg);
     }
 }
