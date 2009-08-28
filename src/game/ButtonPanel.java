@@ -96,15 +96,6 @@ public class ButtonPanel extends JPanel
     {
         _playerTurn.setForeground(getPlayerColor(playerTurn));
         _playerTurn.setText(playerTurn.toString() + "'s Turn");
-        for(int row = 0; row < 6; row++)
-        {
-            for(int col = 0; col < 7; col++)
-            {
-                System.out.println("ButtonPanel.displayPlayerTurn: " + _grid.getPeice(row, col));
-            }
-
-        }
-
     }
 
     private Color getPlayerColor(GridEntry playerTurn)

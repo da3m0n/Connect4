@@ -82,7 +82,7 @@ public class MakeBoard extends JPanel
         if(_grid.play(_turn[_color], column))
         {
             _color = (_color + 1) % 2;
-//         _buttonPanel.displayPlayerTurn(_turn[_color]);
+            _buttonPanel.displayPlayerTurn(_turn[_color]);
             repaint();
 
             if(_grid.findWinner().hasWinner())
