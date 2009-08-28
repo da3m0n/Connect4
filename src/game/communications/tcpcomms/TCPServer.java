@@ -2,6 +2,7 @@ package game.communications.tcpcomms;
 
 import game.*;
 
+import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
@@ -10,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.lang.reflect.InvocationTargetException;
 
 public class TCPServer extends Thread
 {
@@ -74,63 +76,93 @@ public class TCPServer extends Thread
 
                 System.out.println(messageOut);
                 Socket _connection = _listener.accept(); // For communication with the client
-                messageOut = tcpProtocol.processInput(_connection.getInetAddress().getHostName());
+
 //               System.out.println(messageOut);
-                _listener.close();
 
                 _outgoing = new PrintWriter(_connection.getOutputStream(), true);
-                BufferedReader incoming = new BufferedReader(new InputStreamReader(_connection.getInputStream()));
-                sendMessage(messageOut);
+                final BufferedReader incoming = new BufferedReader(new InputStreamReader(_connection.getInputStream()));
 
                 String text = incoming.readLine() + " wants to play a game with you. Wanna play?";
 
                 final NotificationDialog notificationDialog = new NotificationDialog(_game.getFrame(), text);
+
                 notificationDialog.addMyListener(new ActionListener()
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        sendMessage("Connection successful!");
+                        sendMessage("Accepted invitation");
                         notificationDialog.setVisible(false);
                     }
                 });
-                notificationDialog.setVisible(true);
+                invoke(new Runnable() {
 
-                while((messageIn = incoming.readLine()) != null)
-                {
-                    messageOut = tcpProtocol.processInput(messageIn);
-                    System.out.println(messageOut);
-                    sendMessage(messageOut);
-//                   System.out.println(messageIn);
-//                   int i = Integer.getInteger(messageIn);
-//                   System.out.println("i = " + i);
-//                   int col = i.intValue();
-//                   sendMessage(messageIn);
-//                   _makeBoard.play(col);
+                        public void run()
+                        {
+                            notificationDialog.setVisible(true);
+                        }
+                    });
 
-//                    messageOut = tcpProtocol.processInput(messageIn);
-//                    sendMessage(messageOut);
-//                    System.out.println("MessageOut: " + messageOut);
-//                    System.out.println("Message received: " + messageIn);
-//                    sendMessage(messageIn);
-                }
+                gameLoop(incoming, _outgoing, _makeBoard, _grid);
                 _outgoing.close();
                 incoming.close();
-
             }
             catch(IOException e)
             {
                 System.err.println("the other guy closed...");
                 e.printStackTrace();
             }
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
-    private int convertToInt(String messageIn)
+    private void sendMessage(String messageOut)
     {
-        return Integer.getInteger(messageIn);
+        sendMessage(_outgoing, messageOut);
     }
 
-    private void sendMessage(String msg)
+    public static void gameLoop(BufferedReader incoming, PrintWriter outgoing, final MakeBoard _makeBoard, final Grid _grid)
+            throws IOException, InterruptedException
+    {
+        String messageIn;
+        System.out.println("waiting for opponent");
+        while((messageIn = incoming.readLine()) != null)
+        {
+            System.out.println("messageIn = " + messageIn);
+            final int position = Integer.parseInt(messageIn);
+
+            invoke(new Runnable() {
+
+                        public void run()
+                        {
+                            _makeBoard.play(position);
+                        }
+                    });
+            System.out.println("waiting for our move");
+            sendMessage(outgoing, String.valueOf(_grid.getNextMove()));
+//                    messageOut = tcpProtocol.processInput(messageIn);
+//                    sendMessage(messageOut);
+            System.out.println("waiting for opponent");
+        }
+    }
+
+    private static void invoke(Runnable r) {
+        try
+        {
+            SwingUtilities.invokeAndWait(r);
+        }
+        catch(InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        catch(InvocationTargetException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void sendMessage(PrintWriter _outgoing, String msg)
     {
         _outgoing.println(msg);
         _outgoing.flush();

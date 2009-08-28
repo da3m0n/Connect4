@@ -27,22 +27,23 @@ public class TCPProtocol
         }
         else if(_status == CONNECTED)
         {
-            theOutput = "We are connected";
+            theOutput = "Connection established...";
             _status = WAITING_FOR_PLAYER_RESPONSE;
         }
         else if(_status == WAITING_FOR_PLAYER_RESPONSE)
         {
-            theOutput = "Waiting for player response";
-            _status = PLAYER_A_MOVE;
+            theOutput = "Waiting for player B to move...";
+            _status = PLAYER_B_MOVE;
         }
         else if(_status == PLAYER_A_MOVE)
         {
-            theOutput = "Player A, your move";
-            _status = PLAYER_B_MOVE;
+            theOutput = "Player A, your move...";
+//            _status = PLAYER_B_MOVE;
         }
         else if(_status == PLAYER_B_MOVE)
         {
-            theOutput = "Player B, your move";
+            theOutput = "Player B, your move...";
+//            _status = PLAYER_A_MOVE;
         }
         else if(_status == ANOTHER)
         {

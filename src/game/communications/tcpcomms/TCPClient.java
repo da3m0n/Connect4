@@ -17,49 +17,56 @@ public class TCPClient extends Thread
     private ServerSocket _listener; // listens for a connection request
     private Client client;
     private Grid grid;
-   private MakeBoard _makeBoard;
-   private PrintWriter _outgoing;
-    private BufferedReader _incoming;
+    private MakeBoard _makeBoard;
+    private PrintWriter _outgoing;
+//    private BufferedReader _incoming;
 
     public TCPClient(Client client, Grid grid, MakeBoard makeBoard)
     {
         this.client = client;
         this.grid = grid;
-       _makeBoard = makeBoard;
+        _makeBoard = makeBoard;
     }
 
     public void run()
     {
         Socket connection = null; // For communication with the client
+        BufferedReader incoming = null;
+        TCPProtocol tcpProtocol = new TCPProtocol();
+
         try
         {
             connection = new Socket(client.getIPAddress(), client.getPort());
-            _incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             _outgoing = new PrintWriter(connection.getOutputStream());
 
             // send data over socket
             sendMessage(String.valueOf(TCPServer.getInstance().getPort()));
 
-            String fromServer;
+//            sendMessage("Sent game request. Waiting for repsonse");
 
-            while((fromServer = _incoming.readLine()) != null)
-            {
+            String fromServer;
+            fromServer = incoming.readLine();
+            if (fromServer != null) {
                 System.out.println("fromServer = " + fromServer);
-                sendMessage("Waiting for repsonse");
+
 //                    System.out.println("Waiting for other player to move");
 //                    sendMessage("move");
 //                    grid.play(GridEntry.Blue, 0);
-               try
-               {
-//                  System.out.println("move " + grid.getNextMove());
-//                   sendMessage("" + grid.getNextMove());
-                  sendMessage(String.valueOf(grid.getNextMove()));
-               }
-               catch (InterruptedException e)
-               {
-                  e.printStackTrace();
-               }
+                if(fromServer.equals("Accepted invitation"))
+                {
+                    try
+                    {
+                        sendMessage(String.valueOf(grid.getNextMove()));
+                    }
+                    catch(InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
             }
+            TCPServer.gameLoop(incoming, _outgoing, _makeBoard, grid);
         }
         catch(UnknownHostException e)
         {
@@ -71,24 +78,24 @@ public class TCPClient extends Thread
             System.err.println("so and so doesn't want to play");
             e.printStackTrace();
         }
-        finally
+        catch(InterruptedException e)
         {
-            _outgoing.close();
-            try
-            {
-                _incoming.close();
-                assert connection != null;
-                connection.close();
-            }
-            catch(IOException e)
-            {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+        }
+        _outgoing.close();
+        try
+        {
+            incoming.close();
+            connection.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
         }
 
     }
 
-   public void sendMessage(String msg)
+    public void sendMessage(String msg)
     {
         _outgoing.println(msg);
         _outgoing.flush();
