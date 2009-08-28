@@ -5,15 +5,15 @@ import java.io.IOException;
 
 public class Connect4GameServer
 {
-   private ServerSocket serverSocket;
+    private ServerSocket serverSocket;
 
-   public Connect4GameServer() throws IOException
-   {
-      serverSocket = new ServerSocket(0);
-   }
+    public Connect4GameServer() throws IOException
+    {
+        serverSocket = new ServerSocket(0);
+    }
 
-   public int getPort()
-   {
-      return serverSocket.getLocalPort();
-   }
+    public int getPort()
+    {
+        return serverSocket.getLocalPort();
+    }
 }

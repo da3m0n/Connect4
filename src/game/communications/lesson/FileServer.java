@@ -101,7 +101,9 @@ program is terminated, for example by a CONTROL-C. */
             outgoing.flush();
             outgoing.close();
             if(outgoing.checkError())
+            {
                 throw new Exception("Error while transmitting data.");
+            }
         }
 
         void sendFile(String fileName) throws Exception
@@ -117,7 +119,8 @@ program is terminated, for example by a CONTROL-C. */
                 // (Note: Don't try to send a directory, which
                 // shouldn't be there anyway.)
                 outgoing.println("error");
-            } else
+            }
+            else
             {
                 outgoing.println("ok");
                 BufferedReader fileIn = new BufferedReader(new FileReader(file));
@@ -132,7 +135,9 @@ program is terminated, for example by a CONTROL-C. */
             outgoing.flush();
             outgoing.close();
             if(outgoing.checkError())
+            {
                 throw new Exception("Error while transmitting data.");
+            }
         }
 
         public void run()
@@ -154,11 +159,13 @@ program is terminated, for example by a CONTROL-C. */
                 if(command.equals("index"))
                 {
                     sendIndex();
-                } else if(command.startsWith("get"))
+                }
+                else if(command.startsWith("get"))
                 {
                     String fileName = command.substring(3).trim();
                     sendFile(fileName);
-                } else
+                }
+                else
                 {
                     outgoing.println("unknown command");
                     outgoing.flush();

@@ -63,8 +63,7 @@ public class ClientsDisplayPanel extends JPanel
                                 notificationDialog.setVisible(false);
                             }
                         });
-                       notificationDialog.setVisible(true);
-
+                        notificationDialog.setVisible(true);
 
 
 //                  int res = JOptionPane.showConfirmDialog(ClientsDisplayPanel.this, "Do you want to play a game with " + _clients.getDataVector().get(row), "Play", JOptionPane.YES_NO_OPTION);

@@ -94,13 +94,14 @@ public class TCPServer extends Thread
                         notificationDialog.setVisible(false);
                     }
                 });
-                invoke(new Runnable() {
+                invoke(new Runnable()
+                {
 
-                        public void run()
-                        {
-                            notificationDialog.setVisible(true);
-                        }
-                    });
+                    public void run()
+                    {
+                        notificationDialog.setVisible(true);
+                    }
+                });
 
                 gameLoop(incoming, _outgoing, _makeBoard, _grid);
                 _outgoing.close();
@@ -133,13 +134,14 @@ public class TCPServer extends Thread
             System.out.println("messageIn = " + messageIn);
             final int position = Integer.parseInt(messageIn);
 
-            invoke(new Runnable() {
+            invoke(new Runnable()
+            {
 
-                        public void run()
-                        {
-                            _makeBoard.play(position);
-                        }
-                    });
+                public void run()
+                {
+                    _makeBoard.play(position);
+                }
+            });
             System.out.println("waiting for our move");
             sendMessage(outgoing, String.valueOf(_grid.getNextMove()));
 //                    messageOut = tcpProtocol.processInput(messageIn);
@@ -148,7 +150,8 @@ public class TCPServer extends Thread
         }
     }
 
-    private static void invoke(Runnable r) {
+    private static void invoke(Runnable r)
+    {
         try
         {
             SwingUtilities.invokeAndWait(r);
@@ -162,6 +165,7 @@ public class TCPServer extends Thread
             e.printStackTrace();
         }
     }
+
     public static void sendMessage(PrintWriter _outgoing, String msg)
     {
         _outgoing.println(msg);

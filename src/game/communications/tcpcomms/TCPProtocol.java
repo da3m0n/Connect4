@@ -13,10 +13,10 @@ public class TCPProtocol
 
     public TCPProtocol()
     {
-        
+
     }
 
-   public String processInput(String theInput)
+    public String processInput(String theInput)
     {
         String theOutput = null;
 
@@ -53,7 +53,7 @@ public class TCPProtocol
 
         if(theInput.equalsIgnoreCase("3"))
         {
-           System.out.println("clicked pos 3");
+            System.out.println("clicked pos 3");
         }
         return theOutput;
     }

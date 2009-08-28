@@ -20,7 +20,7 @@ public class NotificationDialog extends JDialog
         setLayout(new BorderLayout());
         setModalityType(ModalityType.TOOLKIT_MODAL);
 //        setFocusable(true);
-       
+
         JPanel labelPanel = new JPanel(new BorderLayout());
         _yes = new JButton("Yes");
         JButton no = new JButton("No");
@@ -30,7 +30,8 @@ public class NotificationDialog extends JDialog
         _yes.setMnemonic('y');
         no.setMnemonic('n');
 
-        no.addActionListener(new ActionListener(){
+        no.addActionListener(new ActionListener()
+        {
             public void actionPerformed(ActionEvent e)
             {
                 setVisible(false);
@@ -45,7 +46,7 @@ public class NotificationDialog extends JDialog
 
         add(labelPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
-        
+
         setLocationRelativeTo(parent);
         setSize(350, 125);
     }

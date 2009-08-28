@@ -47,7 +47,8 @@ public class TCPClient extends Thread
 
             String fromServer;
             fromServer = incoming.readLine();
-            if (fromServer != null) {
+            if(fromServer != null)
+            {
                 System.out.println("fromServer = " + fromServer);
 
 //                    System.out.println("Waiting for other player to move");

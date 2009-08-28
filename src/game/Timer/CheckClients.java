@@ -8,42 +8,42 @@ import java.util.*;
 
 public class CheckClients
 {
-   private MulticastSocket _multicastSocket;
-//   private HashSet<Integer> _portsCollection = new HashSet<Integer>();
-   private Map<Integer, String> _portsCollectionMap = new HashMap<Integer, String>();
+    private MulticastSocket _multicastSocket;
+    //   private HashSet<Integer> _portsCollection = new HashSet<Integer>();
+    private Map<Integer, String> _portsCollectionMap = new HashMap<Integer, String>();
 
-   public CheckClients(int seconds, MulticastSocket multicastSocket)
-   {
-      _multicastSocket = multicastSocket;
+    public CheckClients(int seconds, MulticastSocket multicastSocket)
+    {
+        _multicastSocket = multicastSocket;
 //      _address = address;
 
-      Timer timer = new Timer();
-      timer.schedule(new CheckClientsTask(), seconds * 1000);
-   }
+        Timer timer = new Timer();
+        timer.schedule(new CheckClientsTask(), seconds * 1000);
+    }
 
 
-   public CheckClients(int seconds)
-   {
-      Timer timer = new Timer();
-      timer.schedule(new CheckClientsTask(), seconds * 1000);
-   }
+    public CheckClients(int seconds)
+    {
+        Timer timer = new Timer();
+        timer.schedule(new CheckClientsTask(), seconds * 1000);
+    }
 
-   private class CheckClientsTask extends TimerTask
-   {
+    private class CheckClientsTask extends TimerTask
+    {
 
-      public void run()
-      {
-         byte[] packetData = new byte[256];
-         final DatagramPacket packet = new DatagramPacket(packetData, packetData.length);
+        public void run()
+        {
+            byte[] packetData = new byte[256];
+            final DatagramPacket packet = new DatagramPacket(packetData, packetData.length);
 
-         while(true)
-         {
-            try
+            while(true)
             {
-               _multicastSocket.receive(packet);
-               Date now = new Date();
-               DateFormat time = DateFormat.getTimeInstance();
-               String formattedTime = time.format(now);
+                try
+                {
+                    _multicastSocket.receive(packet);
+                    Date now = new Date();
+                    DateFormat time = DateFormat.getTimeInstance();
+                    String formattedTime = time.format(now);
 
 //               _portsCollection.add(packet.getPort());
 //               checkIfClientSentRecentMessage(formattedTime, _portsCollection);
@@ -52,31 +52,31 @@ public class CheckClients
 
 //               checkIfClientSentRecentMessage(_portsCollectionMap);
 //               System.out.println("CheckClients receive: " + now + " " + packet.getIPAddress() + " port: " + packet.getPort());
-            }
-            catch (IOException e)
-            {
-               e.printStackTrace();
-            }
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
 //            String receivedData = new String(packet.getData(), 0, packet.getLength());
-         }
-      }
-   }
+            }
+        }
+    }
 
-   private void checkIfClientSentRecentMessage(Map<Integer, String> portsCollectionMap)
-   {
-      _portsCollectionMap = portsCollectionMap;
+    private void checkIfClientSentRecentMessage(Map<Integer, String> portsCollectionMap)
+    {
+        _portsCollectionMap = portsCollectionMap;
 
-      Collection col = _portsCollectionMap.values();
-      Iterator it = col.iterator();
+        Collection col = _portsCollectionMap.values();
+        Iterator it = col.iterator();
 
-      while(it.hasNext())
-      {
-         Map.Entry<Integer, String> entry = (Map.Entry<Integer, String>) it.next();
-         Integer key = (Integer) entry.getKey();
-         String value = entry.getValue();
-         System.out.println("Entry: " + key + " " + value);
-      }
-   }
+        while(it.hasNext())
+        {
+            Map.Entry<Integer, String> entry = (Map.Entry<Integer, String>) it.next();
+            Integer key = (Integer) entry.getKey();
+            String value = entry.getValue();
+            System.out.println("Entry: " + key + " " + value);
+        }
+    }
 
 //   private boolean checkIfClientSentRecentMessage(String formattedTime, HashSet<Integer> portsCollection)
 //   {
