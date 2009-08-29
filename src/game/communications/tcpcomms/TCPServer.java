@@ -100,6 +100,8 @@ public class TCPServer extends Thread
                     }
                 });
 
+                //todo add listener for selecting"No" from the dialog
+                
                 GameUtils.gameLoop(incoming, _outgoing, _makeBoard, _grid);
                 _outgoing.close();
                 incoming.close();

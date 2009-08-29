@@ -20,7 +20,6 @@ public class MakeBoard extends JPanel
     private ClickListener _clickListener = new ClickListener();
     private MyKeyListener _myKeyListener = new MyKeyListener();
     private ButtonPanel _buttonPanel = new ButtonPanel(_turn[_color], _grid);
-    private BorderLayout borderLayout = new BorderLayout(0, 10);
     private ClientsDisplayPanel _clientsDisplayPanel;// = new ClientsDisplayPanel(_grid);
     private Game _game;
     private int _selectedColumn;
@@ -29,6 +28,7 @@ public class MakeBoard extends JPanel
     {
         _game = game;
         _clientsDisplayPanel = new ClientsDisplayPanel(_grid, _game, this);
+        BorderLayout borderLayout = new BorderLayout(0, 10);
         setLayout(borderLayout);
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Connect 4"));
 
@@ -55,8 +55,7 @@ public class MakeBoard extends JPanel
         });
 
         _paintedGrid.setFocusable(true);
-        _paintedGrid.addKeyListener(_myKeyListener);
-        _paintedGrid.addMouseListener(_clickListener);
+        enableBoard(true);
 
         add(_paintedGrid, BorderLayout.CENTER);
         add(_clientsDisplayPanel, BorderLayout.EAST);
@@ -88,13 +87,25 @@ public class MakeBoard extends JPanel
             if(_grid.findWinner().hasWinner())
             {
                 _buttonPanel.setWinningText(_grid.findWinner().getWinner());
-                _paintedGrid.removeMouseListener(_clickListener);
-                _paintedGrid.removeKeyListener(_myKeyListener);
+                enableBoard(false);
             }
         }
 
     }
 
+    public void enableBoard(boolean enabled)
+    {
+        if(enabled)
+        {
+            _paintedGrid.addKeyListener(_myKeyListener);
+            _paintedGrid.addMouseListener(_clickListener);
+        }
+        else
+        {
+            _paintedGrid.removeMouseListener(_clickListener);
+            _paintedGrid.removeKeyListener(_myKeyListener);
+        }
+    }
 
     public void setURLText(String text)
     {

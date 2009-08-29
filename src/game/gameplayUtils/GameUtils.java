@@ -16,6 +16,7 @@ public class GameUtils
     {
         String messageIn;
         System.out.println("waiting for opponent");
+        makeBoard.enableBoard(false);
         while((messageIn = incoming.readLine()) != null)
         {
             System.out.println("messageIn = " + messageIn);
@@ -29,9 +30,11 @@ public class GameUtils
                 }
             });
             System.out.println("waiting for our move");
+            makeBoard.enableBoard(true);
             sendMessage(outgoing, String.valueOf(grid.getNextMove()));
 //                    messageOut = tcpProtocol.processInput(messageIn);
 //                    sendMessage(messageOut);
+            makeBoard.enableBoard(false);
             System.out.println("waiting for opponent");
         }
     }
