@@ -29,11 +29,10 @@ public class GameUtils
                     makeBoard.play(position);
                 }
             });
+
             System.out.println("waiting for our move");
             makeBoard.enableBoard(true);
             sendMessage(outgoing, String.valueOf(grid.getNextMove()));
-//                    messageOut = tcpProtocol.processInput(messageIn);
-//                    sendMessage(messageOut);
             makeBoard.enableBoard(false);
             System.out.println("waiting for opponent");
         }

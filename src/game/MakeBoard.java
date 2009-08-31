@@ -71,7 +71,7 @@ public class MakeBoard extends JPanel
         _grid.clearCoords();
         repaint();
         _buttonPanel.setWinningText(_grid.findWinner().getWinner());
-        _buttonPanel.resetPlayerText(_turn[color]);
+        _buttonPanel.setPlayerText(_turn[color]);
         _buttonPanel.removeFocus();
     }
 
@@ -93,7 +93,7 @@ public class MakeBoard extends JPanel
         if(_grid.play(_turn[_color], column))
         {
             _color = (_color + 1) % 2;
-            _buttonPanel.displayPlayerTurn(_turn[_color]);
+            _buttonPanel.setPlayerText(_turn[_color]);
             repaint();
 
             if(_grid.findWinner().hasWinner())
@@ -121,11 +121,6 @@ public class MakeBoard extends JPanel
             _paintedGrid.removeMouseListener(_clickListener);
             _paintedGrid.removeKeyListener(_myKeyListener);
         }
-    }
-
-    public void setURLText(String text)
-    {
-        _buttonPanel.setURLText(text);
     }
 
     public int getSelectedColumn()
