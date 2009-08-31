@@ -25,6 +25,7 @@ public class TCPServer extends Thread
     private MakeBoard _makeBoard;
     private boolean _running = true;
     private Grid _grid;
+    private boolean _acceptGame;
 
     private TCPServer()
     {
@@ -86,15 +87,26 @@ public class TCPServer extends Thread
                 
                 final NotificationDialog notificationDialog = new NotificationDialog(_game.getFrame(), text);
 
-                notificationDialog.addMyListener(new ActionListener()
+                notificationDialog.addYesButtonListener(new ActionListener()
                 {
                     public void actionPerformed(ActionEvent e)
                     {
                         sendMessage("Accepted invitation");
+                        _acceptGame = true;
                         notificationDialog.setVisible(false);
                         _makeBoard.resetGame(Integer.parseInt(player));
                     }
                 });
+
+                notificationDialog.addNoButtonListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        sendMessage("Declined invitation");
+                        _acceptGame = false;
+                        notificationDialog.setVisible(false);
+                    }
+                });
+
                 GameUtils.invoke(new Runnable()
                 {
                     public void run()
@@ -103,9 +115,10 @@ public class TCPServer extends Thread
                     }
                 });
 
-                //todo add listener for selecting"No" from the dialog
-                
-                GameUtils.gameLoop(incoming, _outgoing, _makeBoard, _grid);
+                if(_acceptGame)
+                {
+                    GameUtils.gameLoop(incoming, _outgoing, _makeBoard, _grid);
+                }
                 _outgoing.close();
                 incoming.close();
             }

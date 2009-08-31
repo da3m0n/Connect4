@@ -55,11 +55,11 @@ public class ClientsDisplayPanel extends JPanel
 //                  new NotificationDialog(game.getFrame(), client, grid);
                         String text = "Do you want to play a game with " + client;
                         final NotificationDialog notificationDialog = new NotificationDialog(game.getFrame(), text);
-                        notificationDialog.addMyListener(new ActionListener()
+                        notificationDialog.addYesButtonListener(new ActionListener()
                         {
                             public void actionPerformed(ActionEvent e)
                             {
-                                new TCPClient(client, grid, makeBoard).start();
+                                new TCPClient(client, grid, makeBoard, game).start();
                                 notificationDialog.setVisible(false);
                             }
                         });

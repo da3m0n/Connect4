@@ -2,7 +2,6 @@ package game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class NotificationDialog extends JDialog
@@ -10,6 +9,7 @@ public class NotificationDialog extends JDialog
     private ActionListener _myListener;
     private JButton _yes;
     private JLabel _label;
+    private JButton _no;
 
     public NotificationDialog(JFrame parent, String text)
     {
@@ -23,26 +23,26 @@ public class NotificationDialog extends JDialog
 
         JPanel labelPanel = new JPanel(new BorderLayout());
         _yes = new JButton("Yes");
-        JButton no = new JButton("No");
+        _no = new JButton("No");
         JLabel _label = new JLabel(text, icon, JLabel.CENTER);
 
         _yes.setFocusCycleRoot(true);
         _yes.setMnemonic('y');
-        no.setMnemonic('n');
+        _no.setMnemonic('n');
 
-        no.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                setVisible(false);
-            }
-        });
+//        _no.addActionListener(new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                setVisible(false);
+//            }
+//        });
 
         labelPanel.add(_label, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(_yes, BorderLayout.SOUTH);
-        buttonPanel.add(no, BorderLayout.SOUTH);
+        buttonPanel.add(_no, BorderLayout.SOUTH);
 
         add(labelPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -51,8 +51,13 @@ public class NotificationDialog extends JDialog
         setSize(350, 125);
     }
 
-    public void addMyListener(ActionListener actionListener)
+    public void addYesButtonListener(ActionListener actionListener)
     {
         _yes.addActionListener(actionListener);
+    }
+
+    public void addNoButtonListener(ActionListener actionListener)
+    {
+        _no.addActionListener(actionListener);
     }
 }
