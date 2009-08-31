@@ -1,18 +1,19 @@
 package game.communications.tcpcomms;
 
-import game.*;
+import game.Game;
+import game.Grid;
+import game.MakeBoard;
+import game.NotificationDialog;
 import game.gameplayUtils.GameUtils;
 
-import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.lang.reflect.InvocationTargetException;
 
 public class TCPServer extends Thread
 {
@@ -81,7 +82,8 @@ public class TCPServer extends Thread
                 final BufferedReader incoming = new BufferedReader(new InputStreamReader(_connection.getInputStream()));
 
                 String text = incoming.readLine() + " wants to play a game with you. Wanna play?";
-
+                final String player = incoming.readLine();
+                
                 final NotificationDialog notificationDialog = new NotificationDialog(_game.getFrame(), text);
 
                 notificationDialog.addMyListener(new ActionListener()
@@ -90,6 +92,7 @@ public class TCPServer extends Thread
                     {
                         sendMessage("Accepted invitation");
                         notificationDialog.setVisible(false);
+                        _makeBoard.resetGame(Integer.parseInt(player));
                     }
                 });
                 GameUtils.invoke(new Runnable()

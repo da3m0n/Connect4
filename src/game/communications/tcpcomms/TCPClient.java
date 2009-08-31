@@ -44,6 +44,9 @@ public class TCPClient extends Thread
             // send data over socket
             sendMessage(String.valueOf(TCPServer.getInstance().getPort()));
 
+            int selectPlayerColor = _makeBoard.getRandomPlayer();
+            sendMessage(String.valueOf(selectPlayerColor));
+            
             String fromServer;
             fromServer = incoming.readLine();
             if(fromServer != null)
@@ -55,6 +58,7 @@ public class TCPClient extends Thread
 //                    grid.play(GridEntry.Blue, 0);
                 if(fromServer.equals("Accepted invitation"))
                 {
+                    _makeBoard.resetGame(selectPlayerColor);
                     try
                     {
                         sendMessage(String.valueOf(grid.getNextMove()));

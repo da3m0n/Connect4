@@ -16,18 +16,22 @@ public class MakeBoard extends JPanel
     private Grid _grid = new Grid();
     private PaintedGrid _paintedGrid = new PaintedGrid(_grid);
     private GridEntry[] _turn = {Red, Blue};
-    private int _color = 0;
+    private int _color;
     private ClickListener _clickListener = new ClickListener();
     private MyKeyListener _myKeyListener = new MyKeyListener();
-    private ButtonPanel _buttonPanel = new ButtonPanel(_turn[_color], _grid);
-    private ClientsDisplayPanel _clientsDisplayPanel;// = new ClientsDisplayPanel(_grid);
+    private ButtonPanel _buttonPanel;
+    private ClientsDisplayPanel _clientsDisplayPanel;
     private Game _game;
     private int _selectedColumn;
 
     public MakeBoard(Game game)
     {
         _game = game;
+        _color = getRandomPlayer();
+
+        _buttonPanel = new ButtonPanel(_turn[_color]);
         _clientsDisplayPanel = new ClientsDisplayPanel(_grid, _game, this);
+
         BorderLayout borderLayout = new BorderLayout(0, 10);
         setLayout(borderLayout);
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Connect 4"));
@@ -46,11 +50,8 @@ public class MakeBoard extends JPanel
         {
             public void actionPerformed(ActionEvent e)
             {
-                _grid.clearGrid();
-                _grid.clearCoords();
-                repaint();
-                _buttonPanel.setWinningText(_grid.findWinner().getWinner());
-                _buttonPanel.removeFocus();
+                _color = getRandomPlayer();
+                resetGame(_color);
             }
         });
 
@@ -61,6 +62,17 @@ public class MakeBoard extends JPanel
         add(_clientsDisplayPanel, BorderLayout.EAST);
         add(_buttonPanel, BorderLayout.SOUTH);
         this.validate();
+    }
+
+    public void resetGame(int color)
+    {
+        _color = color;
+        _grid.clearGrid();
+        _grid.clearCoords();
+        repaint();
+        _buttonPanel.setWinningText(_grid.findWinner().getWinner());
+        _buttonPanel.resetPlayerText(_turn[color]);
+        _buttonPanel.removeFocus();
     }
 
     private void startServers() throws IOException
@@ -90,7 +102,11 @@ public class MakeBoard extends JPanel
                 enableBoard(false);
             }
         }
+    }
 
+    public int getRandomPlayer()
+    {
+        return (int) (Math.random() * 2);
     }
 
     public void enableBoard(boolean enabled)

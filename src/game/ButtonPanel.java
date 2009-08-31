@@ -16,7 +16,7 @@ public class ButtonPanel extends JPanel
     private JButton _url = new JButton("URL");
     private Grid _grid = new Grid();
 
-    public ButtonPanel(GridEntry gridEntry, Grid grid)
+    public ButtonPanel(GridEntry gridEntry)
     {
 //      setLayout(new GridLayout(1, 4, 5, 5));
         setLayout(_gl);
@@ -85,6 +85,12 @@ public class ButtonPanel extends JPanel
         {
             _winner.setText("");
         }
+    }
+
+    public void resetPlayerText(GridEntry gridEntry)
+    {
+        _playerTurn.setForeground(getPlayerColor(gridEntry));
+        _playerTurn.setText(gridEntry.toString() + "'s Turn");
     }
 
     public void addReplayListener(ActionListener actionListener)
