@@ -1,9 +1,6 @@
 package game.communications.tcpcomms;
 
-import game.Game;
-import game.Grid;
-import game.MakeBoard;
-import game.NotificationDialog;
+import game.*;
 import game.gameplayUtils.GameUtils;
 
 import java.awt.event.ActionEvent;
@@ -91,7 +88,7 @@ public class TCPServer extends Thread
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        sendMessage("Accepted invitation");
+                        sendMessage(Dictionary.ACCEPT_GAME_INVITE);
                         _acceptGame = true;
                         notificationDialog.setVisible(false);
                         _makeBoard.resetGame(Integer.parseInt(player));
@@ -101,7 +98,7 @@ public class TCPServer extends Thread
                 notificationDialog.addNoButtonListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e)
                     {
-                        sendMessage("Declined invitation");
+                        sendMessage(Dictionary.DECLINE_GAME_INVITE);
                         _acceptGame = false;
                         notificationDialog.setVisible(false);
                     }

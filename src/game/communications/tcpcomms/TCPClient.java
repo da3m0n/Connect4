@@ -1,9 +1,6 @@
 package game.communications.tcpcomms;
 
-import game.Client;
-import game.Grid;
-import game.MakeBoard;
-import game.Game;
+import game.*;
 import game.gameplayUtils.GameUtils;
 
 import javax.swing.*;
@@ -11,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.UnknownHostException;
 
@@ -54,7 +50,7 @@ public class TCPClient extends Thread
             fromServer = incoming.readLine();
             if(fromServer != null)
             {
-                if(fromServer.equals("Accepted invitation"))
+                if(fromServer.equals(Dictionary.ACCEPT_GAME_INVITE))
                 {
                     acceptGame = true;
                     _makeBoard.resetGame(selectPlayerColor);
@@ -68,10 +64,9 @@ public class TCPClient extends Thread
                     }
                 }
 
-                if(fromServer.equals("Declined invitation"))
+                if(fromServer.equals(Dictionary.DECLINE_GAME_INVITE))
                 {
                     acceptGame = false;
-                    System.out.println("declined");
                     JOptionPane.showMessageDialog(_game.getFrame(), "Opponent doesn't want to play.");
                 }
             }
