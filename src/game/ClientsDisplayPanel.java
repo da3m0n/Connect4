@@ -34,7 +34,6 @@ public class ClientsDisplayPanel extends JPanel
 
     public ClientsDisplayPanel(final Grid grid, final Game game, final MakeBoard makeBoard)
     {
-//      setPreferredSize(new Dimension(180, 100));
         setBackground(Color.lightGray);
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
@@ -52,7 +51,6 @@ public class ClientsDisplayPanel extends JPanel
                     final Client client = getSelectedClient(row);
                     if(row >= 0)
                     {
-//                  new NotificationDialog(game.getFrame(), client, grid);
                         String text = "Do you want to play a game with " + client;
                         final NotificationDialog notificationDialog = new NotificationDialog(game.getFrame(), text);
                         notificationDialog.addYesButtonListener(new ActionListener()
@@ -64,13 +62,6 @@ public class ClientsDisplayPanel extends JPanel
                             }
                         });
                         notificationDialog.setVisible(true);
-
-
-//                  int res = JOptionPane.showConfirmDialog(ClientsDisplayPanel.this, "Do you want to play a game with " + _clients.getDataVector().get(row), "Play", JOptionPane.YES_NO_OPTION);
-//                  if (res == JOptionPane.YES_OPTION)
-//                  {
-//                     new TCPClient(client, grid).start();
-//                  }
                     }
 
                 }
