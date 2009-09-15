@@ -36,7 +36,7 @@ public class Connect4MultiCastServerThread extends Thread
 
             StringBuffer assemblePacketData = new StringBuffer();
             assemblePacketData.append(Integer.toString(TCPServer.getInstance().getPort()));
-//         assemblePacketData.append("/").append(formattedTime);
+            assemblePacketData.append("/").append(System.getProperty("user.name"));
 
             Date now = new Date();
             DateFormat time = DateFormat.getTimeInstance();

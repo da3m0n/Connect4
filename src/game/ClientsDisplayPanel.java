@@ -35,7 +35,7 @@ public class ClientsDisplayPanel extends JPanel
     public ClientsDisplayPanel(final Grid grid, final Game game, final MakeBoard makeBoard)
     {
         setBackground(Color.lightGray);
-        setBorder(BorderFactory.createLineBorder(Color.darkGray));
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Other players"));
 
         _table.setModel(_clients);
         _table.setFillsViewportHeight(true);
@@ -69,7 +69,6 @@ public class ClientsDisplayPanel extends JPanel
                 }
             }
         });
-//      _table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 
         _table.setDefaultRenderer(Object.class, new ColorRenderer());
 
