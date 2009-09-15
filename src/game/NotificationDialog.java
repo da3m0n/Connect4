@@ -3,6 +3,7 @@ package game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class NotificationDialog extends JDialog
 {
@@ -30,13 +31,13 @@ public class NotificationDialog extends JDialog
         _yes.setMnemonic('y');
         _no.setMnemonic('n');
 
-//        _no.addActionListener(new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                setVisible(false);
-//            }
-//        });
+        _no.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                setVisible(false);
+            }
+        });
 
         labelPanel.add(_label, BorderLayout.CENTER);
 

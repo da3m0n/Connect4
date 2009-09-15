@@ -53,7 +53,7 @@ public class ClientsDisplayPanel extends JPanel
                     final Client client = getSelectedClient(row);
                     if(row >= 0)
                     {
-                        String text = "Do you want to play a game with " + client;
+                        String text = "Do you want to play a game with " + client.getName() + " " + client.getIPAddress();
                         final NotificationDialog notificationDialog = new NotificationDialog(game.getFrame(), text);
                         notificationDialog.addYesButtonListener(new ActionListener()
                         {
@@ -65,7 +65,6 @@ public class ClientsDisplayPanel extends JPanel
                         });
                         notificationDialog.setVisible(true);
                     }
-
                 }
             }
         });
