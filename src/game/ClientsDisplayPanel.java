@@ -39,7 +39,7 @@ public class ClientsDisplayPanel extends JPanel
 
         _table.setModel(_clients);
         _table.setFillsViewportHeight(true);
-        _table.setPreferredScrollableViewportSize(new Dimension(180, 150));
+        _table.setPreferredScrollableViewportSize(new Dimension(200, 150));
         setRowHeight(_table);
         setColumnWidths(_table);
         _table.addMouseListener(new MouseAdapter()

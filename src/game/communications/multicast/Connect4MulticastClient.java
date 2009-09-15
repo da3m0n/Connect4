@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 public class Connect4MulticastClient extends Thread
 {
@@ -44,12 +45,24 @@ public class Connect4MulticastClient extends Thread
 
                 SwingUtilities.invokeLater(new Runnable()
                 {
+                    String port;
+                    String name;
+
                     public void run()
                     {
-                        String port = new String(packet.getData(), 0, packet.getLength());
-//                  System.out.println("port: " + port + " packetAddress: " + packet.getAddress() + " : " + packet.getPort());
-                        _clientsDisplayPanel.addClient(new Client(port, packet.getAddress()));
-//                  _clientsDisplayPanel.addNewClient(port, packet.getIPAddress());
+                        extractData(packet.getData());
+                        _clientsDisplayPanel.addClient(new Client(port, packet.getAddress(), name));
+                    }
+
+                    public void extractData(byte[] data)
+                    {
+                        String str = new String(data);
+                        StringTokenizer st = new StringTokenizer(str, "/");
+                        while(st.hasMoreElements())
+                        {
+                            port = st.nextToken();
+                            name = st.nextToken().trim();
+                        }
                     }
                 });
             }

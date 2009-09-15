@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Game// extends JFrame
 {
     private static final int WIDTH = 650;
-    private static final int HEIGHT = 550;
+    private static final int HEIGHT = 450;
     private JFrame _frame = new JFrame();
 
     public Game() throws IOException

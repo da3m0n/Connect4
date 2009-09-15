@@ -6,11 +6,13 @@ public class Client
 {
     private String _port;
     private InetAddress _ipAddress;
+    private String _name;
 
-    public Client(String port, InetAddress ipAddress)
+    public Client(String port, InetAddress ipAddress, String name)
     {
         _port = port;
         _ipAddress = ipAddress;
+        _name = name;
     }
 
     public int getPort()
@@ -33,6 +35,17 @@ public class Client
         this._ipAddress = address;
     }
 
+    public String getName()
+    {
+        return _name;
+    }
+
+    public void setName(String name)
+    {
+        this._name = name;
+    }
+
+    @Override
     public boolean equals(Object o)
     {
         if(this == o)
@@ -50,6 +63,10 @@ public class Client
         {
             return false;
         }
+        if(_name != null ? !_name.equals(client._name) : client._name != null)
+        {
+            return false;
+        }
         if(_port != null ? !_port.equals(client._port) : client._port != null)
         {
             return false;
@@ -58,21 +75,17 @@ public class Client
         return true;
     }
 
+    @Override
     public int hashCode()
     {
-        int result;
-        result = (_port != null ? _port.hashCode() : 0);
+        int result = _port != null ? _port.hashCode() : 0;
         result = 31 * result + (_ipAddress != null ? _ipAddress.hashCode() : 0);
+        result = 31 * result + (_name != null ? _name.hashCode() : 0);
         return result;
     }
 
     public String toString()
     {
-        return _port + " " + _ipAddress;
+        return _port + " " + _ipAddress + " " + _name;
     }
-
-//   public int getPort()
-//   {
-//      return 0;
-//   }
 }
