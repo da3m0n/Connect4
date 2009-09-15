@@ -1,15 +1,15 @@
 package game;
 
-import game.communications.tcpcomms.TCPServer;
 import game.communications.tcpcomms.TCPClient;
+import game.communications.tcpcomms.TCPServer;
 
 import javax.swing.*;
 import javax.swing.Timer;
-import javax.swing.border.Border;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +21,7 @@ import java.util.*;
 
 public class ClientsDisplayPanel extends JPanel
 {
-    private DefaultTableModel _clients = new DefaultTableModel(new Object[]{"Clients", "IP Address"}, 0)
+    private DefaultTableModel _clients = new DefaultTableModel(new Object[]{"Name", "IP Address", "Port"}, 0)
     {
         public boolean isCellEditable(int row, int column)
         {
@@ -40,6 +40,8 @@ public class ClientsDisplayPanel extends JPanel
         _table.setModel(_clients);
         _table.setFillsViewportHeight(true);
         _table.setPreferredScrollableViewportSize(new Dimension(180, 150));
+        setRowHeight(_table);
+        setColumnWidths(_table);
         _table.addMouseListener(new MouseAdapter()
         {
             public void mouseClicked(MouseEvent e)
@@ -69,6 +71,8 @@ public class ClientsDisplayPanel extends JPanel
         });
 //      _table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 
+        _table.setDefaultRenderer(Object.class, new ColorRenderer());
+
         JScrollPane scrollPane = new JScrollPane(_table);
         add(scrollPane);
 
@@ -81,6 +85,29 @@ public class ClientsDisplayPanel extends JPanel
         });
 
         clearOldClients();
+    }
+
+    private void setColumnWidths(JTable table)
+    {
+        TableColumn column = null;
+        for(int i = 0; i < table.getColumnCount(); i++)
+        {
+            column = table.getColumnModel().getColumn(i);
+            if(i == 2)
+            {
+                column.setPreferredWidth(50);
+            }
+            else
+            {
+                column.setPreferredWidth(100);
+            }
+        }
+    }
+
+    private void setRowHeight(JTable table)
+    {
+        int height = table.getHeight();
+        table.setRowHeight(height + 20);
     }
 
     private Client getSelectedClient(int row)
@@ -135,7 +162,7 @@ public class ClientsDisplayPanel extends JPanel
     {
         try
         {
-            Client me = new Client(String.valueOf(TCPServer.getInstance().getPort()), InetAddress.getLocalHost());
+            Client me = new Client(String.valueOf(TCPServer.getInstance().getPort()), InetAddress.getLocalHost(), System.getProperty("user.name"));
 
             if(!cl.equals(me))
             {
@@ -156,7 +183,7 @@ public class ClientsDisplayPanel extends JPanel
         _clients.setRowCount(0);
         for(Client cl : _currentClients.keySet())
         {
-            _clients.addRow(new Object[]{cl.getPort(), cl.getIPAddress()});
+            _clients.addRow(new Object[]{cl.getName(), cl.getIPAddress(), cl.getPort()});
         }
 
         if(row >= 0)
@@ -166,42 +193,37 @@ public class ClientsDisplayPanel extends JPanel
     }
 
 
-    private class ColorRenderer extends JLabel implements TableCellRenderer
+    private class ColorRenderer extends DefaultTableCellRenderer//JLabel implements TableCellRenderer
     {
-        private boolean _bordered;
-        private Border _selectedBorder;
-        private Border _unselectedBorder;
-
-        public ColorRenderer(boolean isBordered)
-        {
-            _bordered = isBordered;
-            setOpaque(true);
-        }
+        private final DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
 
         public Component getTableCellRendererComponent(JTable table, Object color, boolean isSelected, boolean hasFocus, int row, int column)
         {
-            Color newColor = (Color) color;
-            setBackground(newColor);
-            if(_bordered)
+            Component renderer = DEFAULT_RENDERER.getTableCellRendererComponent(table, color, isSelected, hasFocus, row, column);
+            Color foreground;
+            Color background;
+
+            if(isSelected)
             {
-                if(isSelected)
+                foreground = Color.darkGray;
+                background = Color.orange;
+            }
+            else
+            {
+                if(row % 2 == 0)
                 {
-                    if(_selectedBorder == null)
-                    {
-                        _selectedBorder = BorderFactory.createMatteBorder(2, 5, 2, 5, table.getSelectionBackground());
-                    }
-                    setBorder(_selectedBorder);
+                    foreground = Color.darkGray;
+                    background = Color.white;
                 }
                 else
                 {
-                    if(_unselectedBorder == null)
-                    {
-                        _unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2, 5, table.getBackground());
-                    }
-                    setBorder(_unselectedBorder);
+                    foreground = Color.darkGray;
+                    background = Color.yellow;
                 }
             }
-            return this;
+            renderer.setForeground(foreground);
+            renderer.setBackground(background);
+            return renderer;
         }
     }
 
