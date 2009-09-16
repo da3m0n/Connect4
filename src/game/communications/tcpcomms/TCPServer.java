@@ -91,7 +91,7 @@ public class TCPServer extends Thread
                         sendMessage(Dictionary.ACCEPT_GAME_INVITE);
                         _acceptGame = true;
                         notificationDialog.setVisible(false);
-                        _makeBoard.resetGame(Integer.parseInt(player));
+                        _makeBoard.reset(Integer.parseInt(player));
                     }
                 });
 
@@ -114,6 +114,7 @@ public class TCPServer extends Thread
 
                 if(_acceptGame)
                 {
+                    _makeBoard.setEnabled(false);
                     GameUtils.gameLoop(incoming, _outgoing, _makeBoard, _grid);
                 }
                 _outgoing.close();

@@ -19,10 +19,10 @@ public class MakeBoard extends JPanel
     private int _color;
     private ClickListener _clickListener = new ClickListener();
     private MyKeyListener _myKeyListener = new MyKeyListener();
-    private ButtonPanel _buttonPanel;
     private ClientsDisplayPanel _clientsDisplayPanel;
     private Game _game;
     private int _selectedColumn;
+    private ButtonPanel _buttonPanel;
 
     public MakeBoard(Game game)
     {
@@ -30,11 +30,12 @@ public class MakeBoard extends JPanel
         _color = getRandomPlayer();
 
         _buttonPanel = new ButtonPanel(_turn[_color]);
+
         _clientsDisplayPanel = new ClientsDisplayPanel(_grid, _game, this);
 
         BorderLayout borderLayout = new BorderLayout(0, 10);
         setLayout(borderLayout);
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Connect 4"));
+//        setBorder(BorderFactory.createTitledBorder("Connect 4"));
 
         try
         {
@@ -66,8 +67,13 @@ public class MakeBoard extends JPanel
 
     public void resetGame(int color)
     {
-        _color = color;
         _grid.clearGrid();
+        resetInternal(color);
+    }
+
+    private void resetInternal(int color)
+    {
+        _color = color;
         _grid.clearCoords();
         repaint();
         _buttonPanel.setWinningText(_grid.findWinner().getWinner());
@@ -111,21 +117,25 @@ public class MakeBoard extends JPanel
 
     public void enableBoard(boolean enabled)
     {
+        _grid.setEnabled(enabled);
+        _paintedGrid.removeMouseListener(_clickListener);
+        _paintedGrid.removeKeyListener(_myKeyListener);
         if(enabled)
         {
             _paintedGrid.addKeyListener(_myKeyListener);
             _paintedGrid.addMouseListener(_clickListener);
-        }
-        else
-        {
-            _paintedGrid.removeMouseListener(_clickListener);
-            _paintedGrid.removeKeyListener(_myKeyListener);
         }
     }
 
     public int getSelectedColumn()
     {
         return _selectedColumn;
+    }
+
+    public void reset(int i)
+    {
+        _grid.reset();
+        resetInternal(i);
     }
 
     private class MyKeyListener implements KeyListener

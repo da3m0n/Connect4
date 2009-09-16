@@ -2,6 +2,8 @@ package game.gameplayUtils;
 
 import game.MakeBoard;
 import game.Grid;
+import game.communications.tcpcomms.GameReader;
+import game.communications.tcpcomms.GameWriter;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -14,6 +16,9 @@ public class GameUtils
     public static void gameLoop(BufferedReader incoming, PrintWriter outgoing, final MakeBoard makeBoard, final Grid grid)
             throws IOException, InterruptedException
     {
+        new Thread(new GameWriter(outgoing, grid, makeBoard)).start();
+        new GameReader(incoming, makeBoard).run();
+/*
         String messageIn;
         System.out.println("waiting for opponent");
         makeBoard.enableBoard(false);
@@ -36,6 +41,7 @@ public class GameUtils
             makeBoard.enableBoard(false);
             System.out.println("waiting for opponent");
         }
+*/
     }
 
     public static void invoke(Runnable r)

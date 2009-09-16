@@ -53,18 +53,10 @@ public class TCPClient extends Thread
                 if(fromServer.equals(Dictionary.ACCEPT_GAME_INVITE))
                 {
                     acceptGame = true;
-                    _makeBoard.resetGame(selectPlayerColor);
-                    try
-                    {
-                        sendMessage(String.valueOf(grid.getNextMove()));
-                    }
-                    catch(InterruptedException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    _makeBoard.reset(selectPlayerColor);
+                    _makeBoard.enableBoard(true);
                 }
-
-                if(fromServer.equals(Dictionary.DECLINE_GAME_INVITE))
+                else
                 {
                     acceptGame = false;
                     JOptionPane.showMessageDialog(_game.getFrame(), "Opponent doesn't want to play.");

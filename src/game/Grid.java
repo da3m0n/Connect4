@@ -13,10 +13,12 @@ public class Grid
     private int currentColumn = 0;
     private final Object _mutex = new Object();
     private ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
+    private boolean _clearPressed;
+    private boolean _enabled;
 
     public Grid()
     {
-        clearGrid();
+        reset();
     }
 
     public boolean play(GridEntry e, int column)
@@ -32,7 +34,10 @@ public class Grid
                 grid[row][column] = e;
                 synchronized(_mutex)
                 {
-                    _mutex.notify();
+                    if(_enabled)
+                    {
+                        _mutex.notify();
+                    }
                 }
                 return true;
             }
@@ -103,12 +108,11 @@ public class Grid
 
     public void clearGrid()
     {
-        for(int i = 0; i < grid.length; i++)
+        reset();
+        synchronized(_mutex)
         {
-            for(int j = 0; j < grid[i].length; j++)
-            {
-                grid[i][j] = empty;
-            }
+            _clearPressed = true;
+            _mutex.notify();
         }
     }
 
@@ -250,12 +254,33 @@ public class Grid
         return grid[row][col];
     }
 
-    public int getNextMove() throws InterruptedException
+    public String getNextMove() throws InterruptedException
     {
         synchronized(_mutex)
         {
             _mutex.wait();
-            return currentColumn;
+            if(_clearPressed)
+            {
+                _clearPressed = false;
+                return "Clear";
+            }
+            return String.valueOf(currentColumn);
         }
+    }
+
+    public void reset()
+    {
+        for(int i = 0; i < grid.length; i++)
+        {
+            for(int j = 0; j < grid[i].length; j++)
+            {
+                grid[i][j] = empty;
+            }
+        }
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        _enabled = enabled;
     }
 }
