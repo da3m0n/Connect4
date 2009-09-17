@@ -1,6 +1,7 @@
 package game.communications.tcpcomms;
 
 import game.MakeBoard;
+import game.Grid;
 import game.gameplayUtils.GameUtils;
 
 import java.io.BufferedReader;
@@ -10,21 +11,22 @@ public class GameReader implements Runnable
 {
     private final BufferedReader _incoming;
     private final MakeBoard _makeBoard;
+    private Grid _grid;
 
-    public GameReader(BufferedReader incoming, MakeBoard makeBoard)
+    public GameReader(BufferedReader incoming, MakeBoard makeBoard, Grid grid)
     {
         this._incoming = incoming;
         this._makeBoard = makeBoard;
+        _grid = grid;
     }
 
     public void run()
     {
         String messageIn;
 
-        System.out.println("waiting for opponent");
         try
         {
-            while((messageIn = _incoming.readLine()) != null)
+            while(_grid.findWinner().hasNoWinner() && (messageIn = _incoming.readLine()) != null)
             {
                 final String message = messageIn;
                 GameUtils.invoke(new Runnable()
@@ -44,8 +46,8 @@ public class GameReader implements Runnable
                         }
                     }
                 });
-
             }
+           _makeBoard.enableBoard(false);
         }
         catch(IOException e)
         {

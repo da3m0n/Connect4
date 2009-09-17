@@ -8,11 +8,11 @@ public class Grid
 {
     private static final int MAX_ROW_INDEX = 5;
     private static final int MAX_COLUMN_INDEX = 6;
-    private GridEntry[][] grid = new GridEntry[MAX_ROW_INDEX + 1][MAX_COLUMN_INDEX + 1];
-    private int currentRow = 0;
-    private int currentColumn = 0;
+    private GridEntry[][] _grid = new GridEntry[MAX_ROW_INDEX + 1][MAX_COLUMN_INDEX + 1];
+    private int _currentRow = 0;
+    private int _currentColumn = 0;
     private final Object _mutex = new Object();
-    private ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
+    private ArrayList<Coordinate> _coords = new ArrayList<Coordinate>();
     private boolean _clearPressed;
     private boolean _enabled;
 
@@ -24,14 +24,14 @@ public class Grid
     public boolean play(GridEntry e, int column)
     {
 
-        currentColumn = column;
+        _currentColumn = column;
         for(int row = MAX_ROW_INDEX; row >= 0; row--)
         {
-            currentRow = row;
+            _currentRow = row;
 
-            if(grid[row][column] == empty)
+            if(_grid[row][column] == empty)
             {
-                grid[row][column] = e;
+                _grid[row][column] = e;
                 synchronized(_mutex)
                 {
                     if(_enabled)
@@ -64,10 +64,10 @@ public class Grid
 
     private WinningInfo findRowWinner(boolean colIncr)
     {
-        int index[] = new int[]{currentRow, currentColumn};
+        int index[] = new int[]{_currentRow, _currentColumn};
         int incrIndex;
         int size;
-//      ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
+//      ArrayList<Coordinate> _coords = new ArrayList<Coordinate>();
 
         if(colIncr)
         {
@@ -86,18 +86,18 @@ public class Grid
             int winners = 0;
             for(int column = 0; column < size; column++)
             {
-                if(grid[index[0]][index[1]] == winner)
+                if(_grid[index[0]][index[1]] == winner)
                 {
-                    coords.add(new Coordinate(index[0], index[1]));
+                    _coords.add(new Coordinate(index[0], index[1]));
                     winners++;
                     if(winners == 4)
                     {
-                        return new WinningInfo(winner, coords);
+                        return new WinningInfo(winner, _coords);
                     }
                 }
                 else
                 {
-                    coords.clear();
+                    _coords.clear();
                     winners = 0;
                 }
                 index[incrIndex]++;
@@ -118,7 +118,7 @@ public class Grid
 
     public void clearCoords()
     {
-        coords.clear();
+        _coords.clear();
     }
 
     public ArrayList<Coordinate> getCoords()
@@ -130,13 +130,13 @@ public class Grid
     {
         ArrayList<Coordinate> positions = new ArrayList<Coordinate>();
 
-        for(int row = 0; row < grid.length; row++)
+        for(int row = 0; row < _grid.length; row++)
         {
-            for(int col = 0; col < grid[row].length; col++)
+            for(int col = 0; col < _grid[row].length; col++)
             {
                 if(checkDiagonal(row, col, -1, -1, positions) >= 4 || checkDiagonal(row, col, -1, 1, positions) >= 4)
                 {
-                    return new WinningInfo(grid[row][col], positions);
+                    return new WinningInfo(_grid[row][col], positions);
                 }
             }
         }
@@ -146,7 +146,7 @@ public class Grid
     private int checkDiagonal(int row, int col, int dRow, int dCol, ArrayList<Coordinate> positions)
     {
         int count = 1;
-        GridEntry color = grid[row][col];
+        GridEntry color = _grid[row][col];
         positions.clear();
 
         if(color == empty)
@@ -158,9 +158,9 @@ public class Grid
         row += dRow;
         col += dCol;
 
-        while(row < grid.length && row >= 0 && col >= 0 && col < grid[0].length)
+        while(row < _grid.length && row >= 0 && col >= 0 && col < _grid[0].length)
         {
-            if(color != grid[row][col])
+            if(color != _grid[row][col])
             {
                 return count;
             }
@@ -175,42 +175,11 @@ public class Grid
         return count;
     }
 
-    private GridEntry findColumnWinner()
-    {
-        int reds = 0;
-        int blues = 0;
-
-        for(int row = 0; row < MAX_ROW_INDEX + 1; row++)
-        {
-            if(grid[row][currentColumn] == Red)
-            {
-                blues = 0;
-                reds++;
-                if(reds == 4)
-                {
-                    System.out.println("Red Wins!!!");
-                    return Red;
-                }
-            }
-            else if(grid[row][currentColumn] == Blue)
-            {
-                reds = 0;
-                blues++;
-                if(blues == 4)
-                {
-                    System.out.println("Blue Wins!!!");
-                    return Blue;
-                }
-            }
-        }
-        return empty;
-    }
-
     public void print()
     {
         System.out.println("");
         System.out.println("-----------------------------");
-        for(GridEntry[] r : grid)
+        for(GridEntry[] r : _grid)
         {
             System.out.print("| ");
             for(GridEntry c : r)
@@ -251,7 +220,7 @@ public class Grid
 
     public GridEntry getPeice(int row, int col)
     {
-        return grid[row][col];
+        return _grid[row][col];
     }
 
     public String getNextMove() throws InterruptedException
@@ -264,17 +233,18 @@ public class Grid
                 _clearPressed = false;
                 return "Clear";
             }
-            return String.valueOf(currentColumn);
+
+            return String.valueOf(_currentColumn);
         }
     }
 
     public void reset()
     {
-        for(int i = 0; i < grid.length; i++)
+        for(int i = 0; i < _grid.length; i++)
         {
-            for(int j = 0; j < grid[i].length; j++)
+            for(int j = 0; j < _grid[i].length; j++)
             {
-                grid[i][j] = empty;
+                _grid[i][j] = empty;
             }
         }
     }

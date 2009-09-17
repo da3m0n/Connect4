@@ -17,7 +17,7 @@ public class GameUtils
             throws IOException, InterruptedException
     {
         new Thread(new GameWriter(outgoing, grid, makeBoard)).start();
-        new GameReader(incoming, makeBoard).run();
+        new GameReader(incoming, makeBoard, grid).run();
 /*
         String messageIn;
         System.out.println("waiting for opponent");

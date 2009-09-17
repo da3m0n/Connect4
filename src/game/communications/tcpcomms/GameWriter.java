@@ -12,7 +12,6 @@ public class GameWriter implements Runnable
     private Grid _grid;
     private MakeBoard makeBoard;
 
-
     public GameWriter(PrintWriter _outgoing, Grid _grid, MakeBoard makeBoard)
     {
         this._outgoing = _outgoing;
