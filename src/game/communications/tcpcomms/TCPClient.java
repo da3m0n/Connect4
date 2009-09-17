@@ -18,7 +18,6 @@ public class TCPClient extends Thread
     private MakeBoard _makeBoard;
     private Game _game;
     private PrintWriter _outgoing;
-    private boolean acceptGame;
 
     public TCPClient(Client client, Grid grid, MakeBoard makeBoard, Game game)
     {
@@ -32,7 +31,6 @@ public class TCPClient extends Thread
     {
         Socket connection = null; // For communication with the client
         BufferedReader incoming = null;
-        TCPProtocol tcpProtocol = new TCPProtocol();
 
         try
         {
@@ -52,20 +50,14 @@ public class TCPClient extends Thread
             {
                 if(fromServer.equals(Dictionary.ACCEPT_GAME_INVITE))
                 {
-                    acceptGame = true;
                     _makeBoard.reset(selectPlayerColor);
                     _makeBoard.enableBoard(true);
+                    GameUtils.gameLoop(incoming, _outgoing, _makeBoard, grid);
                 }
                 else
                 {
-                    acceptGame = false;
                     JOptionPane.showMessageDialog(_game.getFrame(), "Opponent doesn't want to play.");
                 }
-            }
-
-            if(acceptGame)
-            {
-                GameUtils.gameLoop(incoming, _outgoing, _makeBoard, grid);
             }
         }
         catch(UnknownHostException e)

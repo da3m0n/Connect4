@@ -114,7 +114,7 @@ public class TCPServer extends Thread
 
                 if(_acceptGame)
                 {
-                    _makeBoard.setEnabled(false);
+                    _makeBoard.enableBoard(false);
                     GameUtils.gameLoop(incoming, _outgoing, _makeBoard, _grid);
                 }
                 _outgoing.close();
