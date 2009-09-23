@@ -43,7 +43,7 @@ public class TCPClient extends Thread
 
             int selectPlayerColor = _makeBoard.getRandomPlayer();
             sendMessage(String.valueOf(selectPlayerColor));
-            
+
             String fromServer;
             fromServer = incoming.readLine();
             if(fromServer != null)
@@ -52,6 +52,7 @@ public class TCPClient extends Thread
                 {
                     _makeBoard.reset(selectPlayerColor);
                     _makeBoard.enableBoard(true);
+                    _makeBoard.updatePlayerText(getPlayerColor(selectPlayerColor));
                     GameUtils.gameLoop(incoming, _outgoing, _makeBoard, grid);
                 }
                 else
@@ -85,6 +86,15 @@ public class TCPClient extends Thread
             e.printStackTrace();
         }
 
+    }
+
+    private String getPlayerColor(int selectPlayerColor)
+    {
+        if(selectPlayerColor == 0)
+        {
+            return "Red";
+        }
+        return "Blue";
     }
 
     public void sendMessage(String msg)

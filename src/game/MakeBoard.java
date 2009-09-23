@@ -202,6 +202,11 @@ public class MakeBoard extends JPanel
         _startNewGame.setEnabled(isEnabled);
     }
 
+    public void updatePlayerText(String player)
+    {
+        _clientsDisplayPanel.updatePlayerText(player);
+    }
+
     private class MyKeyListener implements KeyListener
     {
         public void keyPressed(KeyEvent e)

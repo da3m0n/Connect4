@@ -80,8 +80,9 @@ public class TCPServer extends Thread
                 final BufferedReader incoming = new BufferedReader(new InputStreamReader(_connection.getInputStream()));
 
                 String text = incoming.readLine() + " wants to play a game with you. Wanna play?";
-                final String player = incoming.readLine();
-                
+                final String otherPlayer = incoming.readLine();
+                final String player = getMyPlayer(otherPlayer);
+
                 final NotificationDialog notificationDialog = new NotificationDialog(_game.getFrame(), text);
 
                 notificationDialog.addYesButtonListener(new ActionListener()
@@ -91,7 +92,8 @@ public class TCPServer extends Thread
                         sendMessage(Dictionary.ACCEPT_GAME_INVITE);
                         _acceptGame = true;
                         notificationDialog.setVisible(false);
-                        _makeBoard.reset(Integer.parseInt(player));
+                        _makeBoard.reset(Integer.parseInt(otherPlayer));
+                        _makeBoard.updatePlayerText(player);
                     }
                 });
 
@@ -130,6 +132,15 @@ public class TCPServer extends Thread
                 e.printStackTrace();
             }
         }
+    }
+
+    private String getMyPlayer(String player)
+    {
+        if(player.equals("0"))
+        {
+            return "Blue";
+        }
+        return "Red";
     }
 
     private void sendMessage(String messageOut)

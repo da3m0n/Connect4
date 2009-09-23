@@ -31,9 +31,11 @@ public class ClientsDisplayPanel extends JPanel
     };
     private JTable _table = new JTable();
     private Map<Client, Long> _currentClients = new HashMap<Client, Long>();
+    private JLabel _playerLabel;
 
     public ClientsDisplayPanel(final Grid grid, final Game game, final MakeBoard makeBoard)
     {
+        setLayout(new BorderLayout());
         setBackground(Color.lightGray);
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Other players"));
 
@@ -71,8 +73,12 @@ public class ClientsDisplayPanel extends JPanel
 
         _table.setDefaultRenderer(Object.class, new ColorRenderer());
 
+        _playerLabel = new JLabel();
+        _playerLabel.setVisible(false);
+
         JScrollPane scrollPane = new JScrollPane(_table);
-        add(scrollPane);
+        add(scrollPane, BorderLayout.NORTH);
+        add(_playerLabel, BorderLayout.SOUTH);
 
         _clients.addTableModelListener(new TableModelListener()
         {
@@ -83,6 +89,12 @@ public class ClientsDisplayPanel extends JPanel
         });
 
         clearOldClients();
+    }
+
+    public void updatePlayerText(String player)
+    {
+        _playerLabel.setVisible(true);
+        _playerLabel.setText("You're playing: " + player);
     }
 
     private void setColumnWidths(JTable table)
