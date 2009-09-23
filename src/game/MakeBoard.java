@@ -22,20 +22,20 @@ public class MakeBoard extends JPanel
     private ClientsDisplayPanel _clientsDisplayPanel;
     private Game _game;
     private int _selectedColumn;
-    private ButtonPanel _buttonPanel;
+
+    private JPanel _buttonPanel = new JPanel();
+    private JButton _close = new JButton("Close");
+    private JButton _startNewGame = new JButton("New Game");
+    private JLabel _winner = new JLabel();
+    private JLabel _playerTurn = new JLabel();
+
 
     public MakeBoard(Game game)
     {
         _game = game;
         _color = getRandomPlayer();
 
-        _buttonPanel = new ButtonPanel(_turn[_color]);
-
         _clientsDisplayPanel = new ClientsDisplayPanel(_grid, _game, this);
-
-        BorderLayout borderLayout = new BorderLayout(0, 10);
-        setLayout(borderLayout);
-//        setBorder(BorderFactory.createTitledBorder("Connect 4"));
 
         try
         {
@@ -46,8 +46,26 @@ public class MakeBoard extends JPanel
             e.printStackTrace();
         }
 
-        _buttonPanel.setReplayEnabled(false);
-        _buttonPanel.addReplayListener(new ActionListener()
+        BorderLayout borderLayout = new BorderLayout(0, 10);
+        setLayout(borderLayout);
+
+        GridLayout gridLayout = new GridLayout(1, 4, 10, 10);
+        _buttonPanel.setLayout(gridLayout);
+
+        setPlayerText(_turn[_color]);
+
+        _close.setMnemonic('c');
+        _close.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                System.exit(0);
+            }
+        });
+
+        _startNewGame.setMnemonic('n');
+        _startNewGame.setEnabled(false);
+        _startNewGame.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
@@ -56,13 +74,18 @@ public class MakeBoard extends JPanel
             }
         });
 
+        _buttonPanel.add(_winner, gridLayout);
+        _buttonPanel.add(_playerTurn, gridLayout);
+        _buttonPanel.add(_startNewGame, gridLayout);
+        _buttonPanel.add(_close, gridLayout);
+
         _paintedGrid.setFocusable(true);
         enableBoard(true);
 
         add(_paintedGrid, BorderLayout.CENTER);
         add(_clientsDisplayPanel, BorderLayout.EAST);
         add(_buttonPanel, BorderLayout.SOUTH);
-        this.validate();
+//        this.validate();
     }
 
     public void resetGame(int color)
@@ -76,10 +99,46 @@ public class MakeBoard extends JPanel
         _color = color;
         _grid.clearCoords();
         repaint();
-        _buttonPanel.setWinningText(_grid.findWinner().getWinner());
-        _buttonPanel.setPlayerText(_turn[color]);
-        _buttonPanel.removeFocus();
+        setWinningText(_grid.findWinner().getWinner());
+        setPlayerText(_turn[color]);
+        removeFocus();
+//        enableBoard(true);
     }
+
+    private void setWinningText(GridEntry winner)
+    {
+        if(winner != GridEntry.empty)
+        {
+            _winner.setForeground(getPlayerColor(winner));
+            _winner.setText(winner + " Wins!");
+        }
+        else
+        {
+            _winner.setText("");
+        }
+    }
+
+    private void setPlayerText(GridEntry playerTurn)
+    {
+        _playerTurn.setForeground(getPlayerColor(playerTurn));
+        _playerTurn.setText(playerTurn.toString() + "'s Turn");
+    }
+
+    private void removeFocus()
+    {
+        _startNewGame.setFocusable(false);
+        _close.setFocusable(false);
+    }
+
+    private Color getPlayerColor(GridEntry playerTurn)
+    {
+        if(playerTurn == GridEntry.Red)
+        {
+            return Color.red;
+        }
+        return Color.blue;
+    }
+
 
     private void startServers() throws IOException
     {
@@ -99,12 +158,12 @@ public class MakeBoard extends JPanel
         if(_grid.play(_turn[_color], column))
         {
             _color = (_color + 1) % 2;
-            _buttonPanel.setPlayerText(_turn[_color]);
+            setPlayerText(_turn[_color]);
             repaint();
 
             if(_grid.findWinner().hasWinner())
             {
-                _buttonPanel.setWinningText(_grid.findWinner().getWinner());
+                setWinningText(_grid.findWinner().getWinner());
                 enableBoard(false);
             }
         }
@@ -132,17 +191,22 @@ public class MakeBoard extends JPanel
         return _selectedColumn;
     }
 
-    public void reset(int i)
+    public void reset(int color)
     {
         _grid.reset();
-        resetInternal(i);
+        resetInternal(color);
+    }
+
+    private void setReplayEnabled(boolean isEnabled)
+    {
+        _startNewGame.setEnabled(isEnabled);
     }
 
     private class MyKeyListener implements KeyListener
     {
         public void keyPressed(KeyEvent e)
         {
-            _buttonPanel.setReplayEnabled(true);
+            setReplayEnabled(true);
             int col = e.getKeyCode() - 97;
             if(col >= 0 && col < 7)
             {
@@ -164,7 +228,7 @@ public class MakeBoard extends JPanel
 
         public void mouseClicked(MouseEvent e)
         {
-            _buttonPanel.setReplayEnabled(true);
+            setReplayEnabled(true);
             _selectedColumn = _paintedGrid.giveMeTheColumn(e.getX());
             play(_selectedColumn);
         }
